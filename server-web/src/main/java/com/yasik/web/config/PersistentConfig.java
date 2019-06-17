@@ -76,13 +76,13 @@ public class PersistentConfig {
     }
 
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
     private Properties getProperties() {
         Properties properties = new Properties();
-        InputStream in=getClass().getClassLoader().getResourceAsStream("hibernate.properties");
+        InputStream in = getClass().getClassLoader().getResourceAsStream("hibernate.properties");
         try {
             properties.load(in);
         } catch (IOException e) {

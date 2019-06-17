@@ -26,31 +26,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
-        .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder());
 
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/home").hasRole("CUSTOMER")
-                .antMatchers("/home/leaders/**").hasRole("MODERATOR")
-                .antMatchers("/home/systems/**").hasRole("ADMIN")
+//                .antMatchers("/home").hasRole("CUSTOMER")
+//                .antMatchers("/home/leaders/**").hasRole("MODERATOR")
+//                .antMatchers("/home/systems/**").hasRole("ADMIN")
 //                .antMatchers(HttpMethod.GET, "/api/customers").hasRole("CUSTOMER")
 //                .antMatchers(HttpMethod.GET, "/api/customers/*").hasRole("CUSTOMER")
 //                .antMatchers(HttpMethod.POST, "/api/customers").hasRole("MODERATOR")
 //                .antMatchers(HttpMethod.PUT, "/api/customers").hasRole("MODERATOR")
 //                .antMatchers(HttpMethod.DELETE, "/api/customers").hasRole("ADMIN")
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/authenticateTheUser").successForwardUrl("/home")
-                .permitAll()
-                .and()
                 .logout()
                 .permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/access-denied")
-        .and().csrf().disable();
+                .and()
+                .csrf().disable()
+                .formLogin().disable();
     }
 }

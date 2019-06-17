@@ -22,7 +22,7 @@ public class GraphFactory {
             return new CustomerGraph(entityManager);
         } else if (o.getClass().isInstance(Product.class)) {
             return new ProductGraph(entityManager);
-        } else return new CustomerGraph(entityManager);
+        } else return null;
     }
 
 }

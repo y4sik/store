@@ -4,6 +4,7 @@ import com.yasik.dao.CustomerDAO;
 import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.graph.GraphType;
 import com.yasik.service.CustomerService;
+import com.yasik.service.excetpion.handle.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,16 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public List<Customer> getCustomers(GraphType graphType) {
+        List<Customer> customers = customerDAO.getAll(graphType);
+        if ((customers.size() == 0)) {
+            throw new EntityNotFoundException("Customers not found");
+        }
         return customerDAO.getAll(graphType);
     }
 
     @Override
     @Transactional
-    public void saveCustomer(Customer customer) {
+    public void createCustomer(Customer customer) {
         customerDAO.persist(customer);
     }
 
@@ -39,8 +44,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Customer getCustomer(long id, GraphType graphType) {
-        return customerDAO.geById(id, graphType);
+    public Customer getCustomer(long id, GraphType graphType) throws EntityNotFoundException {
+        Customer customer = customerDAO.geById(id, graphType);
+        if (customer == null) {
+            throw new EntityNotFoundException("Customer with id " + id + ", not found");
+        }
+        return customer;
     }
 
     @Override

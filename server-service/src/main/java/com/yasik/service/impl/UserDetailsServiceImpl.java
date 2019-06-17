@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<Customer> customers = customerDAO.findByUsername(username);
         if (customers.size() == 0) {
-            return null;
+            throw new UsernameNotFoundException(username);
         } else {
             return customers.get(0);
 

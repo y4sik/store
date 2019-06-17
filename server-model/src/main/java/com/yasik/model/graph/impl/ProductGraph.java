@@ -7,21 +7,25 @@ import com.yasik.model.graph.MyGraph;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 
-public class ProductGraph implements MyGraph<Product> {
+public class ProductGraph extends DefaultGraph<Product> implements MyGraph<Product> {
 
     private EntityManager entityManager;
 
     public ProductGraph(EntityManager entityManager) {
+        super(entityManager);
         this.entityManager = entityManager;
     }
 
     @Override
     public EntityGraph<Product> getGraph(GraphType graphName) {
+
         switch (graphName) {
             case PRODUCT_WITH_PICTURE_CATEGORY_FEEDBACK_ORDERS:
                 return ProductWithPictureCategoryFeedbackOrders();
             case PRODUCT_WITH_PICTURE_FEEDBACK:
                 return ProductWithPictureFeedBack();
+            case PURE_ENTITY:
+                return pureEntity(Product.class);
         }
         return null;
     }

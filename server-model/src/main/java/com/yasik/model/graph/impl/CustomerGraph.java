@@ -7,11 +7,12 @@ import com.yasik.model.graph.MyGraph;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 
-public class CustomerGraph implements MyGraph<Customer> {
+public class CustomerGraph extends DefaultGraph<Customer> implements MyGraph<Customer> {
 
     private EntityManager entityManager;
 
     public CustomerGraph(EntityManager entityManager) {
+        super(entityManager);
         this.entityManager = entityManager;
     }
 
@@ -22,6 +23,8 @@ public class CustomerGraph implements MyGraph<Customer> {
                 return CustomerWithAuthoritiesAddressesFeedbackOrders();
             case CUSTOMER_WITH_AUTHORITIES:
                 return CustomerWithAuthorities();
+            case PURE_ENTITY:
+                return pureEntity(Customer.class);
         }
         return null;
     }
@@ -40,4 +43,6 @@ public class CustomerGraph implements MyGraph<Customer> {
         graph.addAttributeNodes("authorities");
         return graph;
     }
+
+
 }
