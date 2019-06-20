@@ -44,6 +44,15 @@ public class CustomerController {
         return customer;
     }
 
+    public Customer logIn(@RequestParam String email, @RequestParam String password){
+        return null;
+    }
+
+    @PutMapping
+    public Customer update(@RequestBody Customer customer){
+        return customer;
+    }
+
     @DeleteMapping("/customers/{customerId}")
     public long deleteAccount(@PathVariable long customerId) {
         Customer customer = customerService.getCustomer(customerId, GraphType.CUSTOMER_WITH_AUTHORITIES);

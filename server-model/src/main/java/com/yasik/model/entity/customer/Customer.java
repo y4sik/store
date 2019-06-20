@@ -1,9 +1,15 @@
 package com.yasik.model.entity.customer;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.yasik.model.entity.Feedback;
 import com.yasik.model.entity.Order;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +48,7 @@ public class Customer implements UserDetails {
 
     //    @JsonDeserialize(using = CustomDateDeserializer.class)
     @Column(name = "date_of_birthday")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dateOfBirthday;
 
     @Column(name = "phone_number")
@@ -221,6 +228,14 @@ public class Customer implements UserDetails {
         }
         orders.add(order);
         order.setCustomer(this);
+    }
+
+    public void add(Authorities authority) {
+        if (this.authorities == null) {
+            this.authorities = new HashSet<>();
+        }
+        this.authorities.add(authority);
+        authority.setCustomer(this);
     }
 
     @Override

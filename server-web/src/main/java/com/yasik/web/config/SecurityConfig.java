@@ -1,8 +1,10 @@
 package com.yasik.web.config;
 
+import com.yasik.service.excetpion.handle.GlobalExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,6 +19,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private GlobalExceptionHandler handler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,21 +38,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-//                .antMatchers("/home").hasRole("CUSTOMER")
-//                .antMatchers("/home/leaders/**").hasRole("MODERATOR")
-//                .antMatchers("/home/systems/**").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.GET, "/api/customers").hasRole("CUSTOMER")
-//                .antMatchers(HttpMethod.GET, "/api/customers/*").hasRole("CUSTOMER")
-//                .antMatchers(HttpMethod.POST, "/api/customers").hasRole("MODERATOR")
-//                .antMatchers(HttpMethod.PUT, "/api/customers").hasRole("MODERATOR")
+                .antMatchers(HttpMethod.GET, "/api/customers").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
+//                .antMatchers(HttpMethod.GET, "/api/customers/*").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
+//                .antMatchers(HttpMethod.POST, "/api/customers").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.PUT, "/api/customers").hasRole("ADMIN")
 //                .antMatchers(HttpMethod.DELETE, "/api/customers").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.GET, "/api/products").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
+//                .antMatchers(HttpMethod.GET, "/api/products/*").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
+//                .antMatchers(HttpMethod.POST, "/api/products").hasRole("MODERATOR")
+//                .antMatchers(HttpMethod.PUT, "/api/products").hasRole("MODERATOR")
+//                .antMatchers(HttpMethod.DELETE, "/api/products").hasRole("MODERATOR")
                 .and()
-                .logout()
-                .permitAll()
-                .and()
-                .exceptionHandling().accessDeniedPage("/access-denied")
+                .exceptionHandling().authenticationEntryPoint(handler)
                 .and()
                 .csrf().disable()
                 .formLogin().disable();
     }
+
+//    @Override
+//    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+//        httpServletResponse.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Authentication token was either missing or invalid." );
+//    }
 }

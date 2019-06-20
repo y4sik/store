@@ -2,6 +2,7 @@ package com.yasik.service.excetpion.handle;
 
 import java.time.LocalDateTime;
 
+
 public class ErrorResponseBody {
 
     //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
@@ -23,7 +24,7 @@ public class ErrorResponseBody {
 
     private String formatDate(LocalDateTime timeStamp) {
         return timeStamp.getYear() + "-" + timeStamp.getMonthValue() + "-" + timeStamp.getDayOfMonth() +
-                "," + timeStamp.getHour() + ":" + timeStamp.getMinute() + ":" + timeStamp.getSecond();
+                ", " + timeStamp.getHour() + ":" + timeStamp.getMinute() + ":" + timeStamp.getSecond();
     }
 
     public int getStatus() {
@@ -48,5 +49,14 @@ public class ErrorResponseBody {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = formatDate(timeStamp);
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorResponseBody{" +
+                "timeStamp='" + timeStamp + '\'' +
+                ", status=" + status +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

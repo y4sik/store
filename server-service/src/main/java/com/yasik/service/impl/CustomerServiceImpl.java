@@ -1,6 +1,7 @@
 package com.yasik.service.impl;
 
 import com.yasik.dao.CustomerDAO;
+import com.yasik.model.entity.customer.Authorities;
 import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.graph.GraphType;
 import com.yasik.service.CustomerService;
@@ -33,6 +34,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void createCustomer(Customer customer) {
+        Authorities authority = new Authorities("CUSTOMER");//must be table with authorities;
+        customer.add(authority);
         customerDAO.persist(customer);
     }
 
