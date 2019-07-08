@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<Customer> customers = customerDAO.findByUsername(username);
         if (customers.size() == 0) {
-            return null;
+            throw new UsernameNotFoundException("User not found.");//add exception
         } else {
             return customers.get(0);
 
@@ -46,5 +46,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //            throw new UsernameNotFoundException("User: " + username + " not found!");
 //        }
     }
+
 
 }

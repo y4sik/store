@@ -2,8 +2,10 @@ package com.yasik.service.impl;
 
 import com.yasik.dao.AddressDAO;
 import com.yasik.model.entity.customer.Address;
+import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.graph.GraphType;
 import com.yasik.service.AddressService;
+import com.yasik.service.exception.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,31 +23,66 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public List<Address> getAddresses(GraphType graphType) {
-        return addressDAO.getAll(graphType);
+    public List<Address> getAllAddresses() {
+        List<Address> addresses = addressDAO.getAll(GraphType.PURE_ENTITY);
+        if ((addresses.size() == 0)) {
+            throw new EntityNotFoundException("There are no addresses!");
+        }
+        return addresses;
     }
 
     @Override
     @Transactional
-    public void saveAddress(Address address) {
-        addressDAO.persist(address);
+    public Address saveAddress(Address address, long customerId) {
+        Customer customer = new Customer();
+        customer.setId(customerId);
+        address.setCustomer(customer);
+        return addressDAO.persist(address);
     }
+
 
     @Override
     @Transactional
-    public void updateAddress(Address address) {
-        addressDAO.merge(address);
-    }
-
-    @Override
-    @Transactional
-    public Address getAddress(long id, GraphType graphType) {
-        return addressDAO.geById(id, graphType);
-    }
-
-    @Override
-    @Transactional
-    public void deleteAddress(Address address) {
+    public long deleteAddress(long id) {
+        Address address = addressDAO.geById(id, GraphType.PURE_ENTITY);
+        if (address == null) {
+            throw new EntityNotFoundException("Can't delete address. Invalid Id [" + id + "]!");
+        }
         addressDAO.remove(address);
+        return id;
     }
+
+    @Override
+    @Transactional
+    public List<Address> getCustomerAddresses(long customerId) {
+        List<Address> addresses = addressDAO.getAddressesByCustomerId(customerId);
+        if (addresses.size() == 0) {
+            throw new EntityNotFoundException("Customer with id [" + customerId + "], has no addresses!");
+        }
+        return addresses;
+    }
+
+    @Override
+    @Transactional
+    public Address getCustomerAddress(long customerId, long addressId) {
+        List<Address> addresses = addressDAO.getAddressByCustomerAndAddressId(customerId, addressId);
+        if (addresses.size() == 0) {
+            throw new EntityNotFoundException("Customer with id [" + customerId + "], " +
+                    "has no address [" + addressId + "]");
+        }
+        return addresses.get(0);
+    }
+
+    @Override
+    @Transactional
+    public long deleteCustomerAddress(long customerId, long addressId) {
+        List<Address> addresses = addressDAO.getAddressByCustomerAndAddressId(customerId, addressId);
+        if (addresses.size() == 0) {
+            throw new EntityNotFoundException("Customer has no such address!");
+        }
+        addressDAO.remove(addresses.get(0));
+        return addressId;
+    }
+
+
 }

@@ -1,6 +1,6 @@
 package com.yasik.web.config;
 
-import com.yasik.service.excetpion.handle.GlobalExceptionHandler;
+import com.yasik.service.handler.GlobalExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private GlobalExceptionHandler handler;
+    private GlobalExceptionHandler exceptionHandler;
+
+    private static String REALM="MY_TEST_REALM";
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,25 +40,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/customers").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
-//                .antMatchers(HttpMethod.GET, "/api/customers/*").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
-//                .antMatchers(HttpMethod.POST, "/api/customers").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.PUT, "/api/customers").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.DELETE, "/api/customers").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.GET, "/api/products").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
-//                .antMatchers(HttpMethod.GET, "/api/products/*").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
-//                .antMatchers(HttpMethod.POST, "/api/products").hasRole("MODERATOR")
-//                .antMatchers(HttpMethod.PUT, "/api/products").hasRole("MODERATOR")
-//                .antMatchers(HttpMethod.DELETE, "/api/products").hasRole("MODERATOR")
+                .antMatchers(HttpMethod.POST, "api/customers").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/customers").hasAnyRole("ADMIN", "MODERATOR")
+                .antMatchers(HttpMethod.GET, "/api/customers/*").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
+                .antMatchers(HttpMethod.PUT, "/api/customers").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/customers").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/products").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
+                .antMatchers(HttpMethod.GET, "/api/products/*").hasAnyRole("CUSTOMER", "ADMIN", "MODERATOR")
+                .antMatchers(HttpMethod.POST, "/api/products").hasRole("MODERATOR")
+                .antMatchers(HttpMethod.PUT, "/api/products").hasRole("MODERATOR")
+                .antMatchers(HttpMethod.DELETE, "/api/products").hasRole("MODERATOR")
+                .antMatchers(HttpMethod.GET, "/api/addresses").hasAnyRole("ADMIN", "MODERATOR")
+                .antMatchers(HttpMethod.POST, "/api/addresses").hasAnyRole("ADMIN", "MODERATOR")
                 .and()
-                .exceptionHandling().authenticationEntryPoint(handler)
+                .httpBasic().realmName(REALM).authenticationEntryPoint(exceptionHandler)
                 .and()
-                .csrf().disable()
-                .formLogin().disable();
+//                .exceptionHandling().authenticationEntryPoint(exceptionHandler)
+//                .and()
+                .csrf().disable();
+//                .formLogin()
+//        .successHandler()
+//        .failureHandler();
+//        http.addFilterAfter(new AuthFilterExceptionHandler(), BasicAuthenticationFilter.class);
     }
-
-//    @Override
-//    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-//        httpServletResponse.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Authentication token was either missing or invalid." );
-//    }
 }

@@ -1,7 +1,7 @@
 package com.yasik.web.controller;
 
-import com.yasik.service.FeedbackService;
 import com.yasik.model.entity.Feedback;
+import com.yasik.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,16 +14,10 @@ public class FeedbackController {
     @Autowired
     private FeedbackService feedbackService;
 
-    @PostMapping("/feedback")
-    public Feedback leaveFeedback(@RequestBody Feedback feedback) {
-        feedbackService.leaveFeedback(feedback);
+    @PostMapping("/feedback/{productId}")
+    public Feedback leaveFeedback(@RequestBody Feedback feedback, @PathVariable long productId) {
+        feedbackService.leaveFeedback(feedback, productId);
         return feedback;
-    }
-
-    @GetMapping("/feedback/customer/{customerId}")
-    public List<Feedback> getAllCustomerFeedback(@PathVariable long customerId) {
-        return feedbackService.getCustomerFeedback(customerId);
-
     }
 
     @GetMapping("/feedback/product/{productId}")

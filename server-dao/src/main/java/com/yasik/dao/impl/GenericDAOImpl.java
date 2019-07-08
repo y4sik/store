@@ -1,8 +1,8 @@
 package com.yasik.dao.impl;
 
 import com.yasik.dao.GenericDAO;
-import com.yasik.model.graph.impl.GraphFactory;
 import com.yasik.model.graph.GraphType;
+import com.yasik.model.graph.impl.GraphFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +39,9 @@ public class GenericDAOImpl<Entity> implements GenericDAO<Entity> {
     }
 
     @Override
-    public void persist(Entity entity) {
-
+    public Entity persist(Entity entity) {
         entityManager.persist(entity);
+        return entity;
     }
 
     @Override

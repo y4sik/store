@@ -1,4 +1,4 @@
-package com.yasik.model.graph.impl;
+package com.yasik.model.graph;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;

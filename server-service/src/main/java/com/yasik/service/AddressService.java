@@ -1,19 +1,20 @@
 package com.yasik.service;
 
 import com.yasik.model.entity.customer.Address;
-import com.yasik.model.graph.GraphType;
 
 import java.util.List;
 
 public interface AddressService {
 
-    List<Address> getAddresses(GraphType graphType);//default grpaphType
+    List<Address> getAllAddresses();
 
-    void saveAddress(Address address);
+    Address saveAddress(Address address, long customerId);
 
-    void updateAddress(Address address);
+    Address getCustomerAddress(long customerId, long addressId);
 
-    Address getAddress(long id, GraphType graphType);
+    long deleteAddress(long id);
 
-    void deleteAddress(Address address);
+    List<Address> getCustomerAddresses(long customerId);
+
+    long deleteCustomerAddress(long customerId, long addressId);
 }

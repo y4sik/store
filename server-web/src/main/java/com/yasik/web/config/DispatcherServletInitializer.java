@@ -1,5 +1,6 @@
 package com.yasik.web.config;
 
+//import com.yasik.service.excetpion.handle.FilterExceptionHandler;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -19,4 +20,9 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
         return new String[]{"/"};
     }
 
+//    @Override
+//    protected Filter[] getServletFilters() {
+//        return new Filter[]{new FilterExceptionHandler()};
+//    }
 }
+

@@ -33,7 +33,7 @@ public class Address {
     private int postcode;
 
     //@JsonBackReference
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;

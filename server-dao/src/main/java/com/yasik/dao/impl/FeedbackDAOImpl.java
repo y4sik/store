@@ -18,6 +18,10 @@ public class FeedbackDAOImpl extends GenericDAOImpl<Feedback> implements Feedbac
     @PersistenceContext
     private EntityManager entityManager;
 
+    public FeedbackDAOImpl() {
+        super(Feedback.class);
+    }
+
     @Override
     public List<Feedback> getFeedbackByProductId(long productId) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();

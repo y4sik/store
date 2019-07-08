@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GenericDAO<Entity> {
 
-    void persist(Entity entity);
+    Entity persist(Entity entity);
 
     Entity geById(long id, GraphType graphType);
 

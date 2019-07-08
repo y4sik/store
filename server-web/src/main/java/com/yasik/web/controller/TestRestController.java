@@ -22,7 +22,7 @@ public class TestRestController {
         Customer customer = new Customer();
         customer.setId(customerIdFromSession);
         address.setCustomer(customer);
-        addressService.saveAddress(address);
+//        addressService.saveAddress(address);
         return address;
     }
 

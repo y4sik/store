@@ -1,6 +1,7 @@
-package com.yasik.service.excetpion.handle;
+package com.yasik.service.exception;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class ErrorResponseBody {
@@ -23,8 +24,7 @@ public class ErrorResponseBody {
     }
 
     private String formatDate(LocalDateTime timeStamp) {
-        return timeStamp.getYear() + "-" + timeStamp.getMonthValue() + "-" + timeStamp.getDayOfMonth() +
-                ", " + timeStamp.getHour() + ":" + timeStamp.getMinute() + ":" + timeStamp.getSecond();
+        return timeStamp.format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss"));
     }
 
     public int getStatus() {

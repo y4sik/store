@@ -2,6 +2,8 @@ package com.yasik.service.impl;
 
 import com.yasik.dao.FeedbackDAO;
 import com.yasik.model.entity.Feedback;
+import com.yasik.model.entity.customer.Customer;
+import com.yasik.model.entity.product.Product;
 import com.yasik.service.FeedbackService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,8 +46,20 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Transactional
     @Override
-    public void leaveFeedback(Feedback feedback) {
-        feedbackDAO.persist(feedback);
+    public Feedback leaveFeedback(Feedback feedback, long productId) {
+        long customerIdFromSession = 8;
+        Product product = new Product();
+        product.setId(productId);
+        Customer customer = new Customer();
+        customer.setId(customerIdFromSession);
+        feedback.setProduct(product);
+        feedback.setCustomer(customer);
+        return feedbackDAO.persist(feedback);
+    }
+
+    @Override
+    public long deleteFeedback(long id) {
+        return 0;
     }
 
 }

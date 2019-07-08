@@ -9,20 +9,21 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Component
-public class GraphFactory {
+public class GraphFactory<Entity> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public GraphFactory() {
+
     }
 
-    public MyGraph createGraph(Object o) {
-        if (o.getClass().isInstance(Customer.class)) {
+    public MyGraph createGraph(Class<Entity> entityClass) {
+        if (entityClass.getClass().isInstance(Customer.class)) {
             return new CustomerGraph(entityManager);
-        } else if (o.getClass().isInstance(Product.class)) {
+        } else if (entityClass.getClass().isInstance(Product.class)) {
             return new ProductGraph(entityManager);
-        } else return null;
+        } else return new GenericPureGraph(entityClass);
     }
 
 }

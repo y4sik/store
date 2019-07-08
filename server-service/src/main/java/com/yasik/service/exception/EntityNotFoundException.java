@@ -1,4 +1,4 @@
-package com.yasik.service.excetpion.handle;
+package com.yasik.service.exception;
 
 
 public class EntityNotFoundException extends RuntimeException {

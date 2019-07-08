@@ -9,5 +9,7 @@ public interface FeedbackService {
 
     List<Feedback> getProductFeedback(long productId);
 
-    void leaveFeedback(Feedback feedback);
+    Feedback leaveFeedback(Feedback feedback, long productId);
+
+    long deleteFeedback(long id);
 }
