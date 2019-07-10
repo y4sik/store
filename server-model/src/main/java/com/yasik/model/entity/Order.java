@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -118,5 +119,20 @@ public class Order {
                 ", status=" + status +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Double.compare(order.price, price) == 0 &&
+                Objects.equals(date, order.date) &&
+                Objects.equals(status, order.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, status, price);
     }
 }

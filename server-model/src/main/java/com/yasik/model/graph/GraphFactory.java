@@ -1,8 +1,11 @@
-package com.yasik.model.graph.impl;
+package com.yasik.model.graph;
 
 import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.entity.product.Product;
 import com.yasik.model.graph.MyGraph;
+import com.yasik.model.graph.impl.CustomerGraph;
+import com.yasik.model.graph.impl.GenericPureGraph;
+import com.yasik.model.graph.impl.ProductGraph;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;

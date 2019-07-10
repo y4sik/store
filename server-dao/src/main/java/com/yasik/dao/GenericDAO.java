@@ -8,7 +8,7 @@ public interface GenericDAO<Entity> {
 
     Entity persist(Entity entity);
 
-    Entity geById(long id, GraphType graphType);
+    Entity getById(long id, GraphType graphType);
 
     List<Entity> getAll(GraphType graphType);
 

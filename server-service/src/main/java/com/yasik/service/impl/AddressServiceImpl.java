@@ -23,12 +23,22 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public List<Address> getAllAddresses() {
-        List<Address> addresses = addressDAO.getAll(GraphType.PURE_ENTITY);
+    public List<Address> getAllAddresses(GraphType graphType) {
+        List<Address> addresses = addressDAO.getAll(graphType);
         if ((addresses.size() == 0)) {
             throw new EntityNotFoundException("There are no addresses!");
         }
         return addresses;
+    }
+
+    @Override
+    @Transactional
+    public Address getAddress(long id, GraphType graphType) {
+        Address address = addressDAO.getById(id, graphType);
+        if (address == null) {
+            throw new EntityNotFoundException("Address with id [" + id + "], not found!");
+        }
+        return address;
     }
 
     @Override
@@ -44,7 +54,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public long deleteAddress(long id) {
-        Address address = addressDAO.geById(id, GraphType.PURE_ENTITY);
+        Address address = addressDAO.getById(id, GraphType.PURE_ENTITY);
         if (address == null) {
             throw new EntityNotFoundException("Can't delete address. Invalid Id [" + id + "]!");
         }

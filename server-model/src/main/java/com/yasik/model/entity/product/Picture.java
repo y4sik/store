@@ -1,6 +1,7 @@
 package com.yasik.model.entity.product;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "picture")
@@ -41,5 +42,18 @@ public class Picture {
                 "id=" + id +
                 ", picturePath='" + picturePath + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Picture picture = (Picture) o;
+        return Objects.equals(picturePath, picture.picturePath);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(picturePath);
     }
 }

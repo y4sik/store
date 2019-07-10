@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 
 public class ErrorResponseBody {
 
-    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
-//    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private String timeStamp;
     private int status;
     private String message;

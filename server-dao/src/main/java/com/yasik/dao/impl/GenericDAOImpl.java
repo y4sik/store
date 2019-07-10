@@ -2,11 +2,11 @@ package com.yasik.dao.impl;
 
 import com.yasik.dao.GenericDAO;
 import com.yasik.model.graph.GraphType;
-import com.yasik.model.graph.impl.GraphFactory;
+import com.yasik.model.graph.GraphFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Repository
 public class GenericDAOImpl<Entity> implements GenericDAO<Entity> {
 
     private static final Logger LOGGER = LogManager.getLogger(GenericDAOImpl.class);
@@ -45,7 +45,7 @@ public class GenericDAOImpl<Entity> implements GenericDAO<Entity> {
     }
 
     @Override
-    public Entity geById(long id, GraphType graphType) {
+    public Entity getById(long id, GraphType graphType) {
         EntityGraph graph = graphFactory.createGraph(entityClass).getGraph(graphType);
         Map<String, Object> hints = new HashMap<>();
         hints.put("javax.persistence.fetchgraph", graph);

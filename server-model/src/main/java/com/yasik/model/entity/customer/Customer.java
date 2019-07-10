@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @JsonIdentityInfo(
@@ -250,5 +251,24 @@ public class Customer implements UserDetails {
                 ", dateOfBirthday=" + dateOfBirthday +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(username, customer.username) &&
+                Objects.equals(password, customer.password) &&
+                Objects.equals(name, customer.name) &&
+                Objects.equals(surname, customer.surname) &&
+                Objects.equals(gender, customer.gender) &&
+                Objects.equals(dateOfBirthday, customer.dateOfBirthday) &&
+                Objects.equals(phoneNumber, customer.phoneNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password, name, surname, gender, dateOfBirthday, phoneNumber);
     }
 }

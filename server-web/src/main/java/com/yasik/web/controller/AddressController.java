@@ -26,16 +26,21 @@ public class AddressController {
 
     @DeleteMapping("/addresses/{addressId}")
     public long deleteCustomerAddress(@PathVariable long addressId, @CurrentCustomer Customer customer) {
-        return addressService.deleteCustomerAddress(customer.getId(), addressId);
+        long id = addressService.deleteCustomerAddress(customer.getId(), addressId);
+        LOGGER.info("Address with id[" + addressId + "], was successfully deleted!");
+        return id;
     }
 
     @PostMapping("/addresses")
     public Address addCustomerAddress(@RequestBody Address address, @CurrentCustomer Customer currentCustomer) {
-        return addressService.saveAddress(address, currentCustomer.getId());
+        Address addedAddress = addressService.saveAddress(address, currentCustomer.getId());
+        LOGGER.info("Address [" + address + "], was successfully added, " +
+                "for customer with id[" + currentCustomer.getId() + "]!");
+        return addedAddress;
     }
 
-    @PostMapping("/addresses/{addressId}")
-    public Address addCustomerAddress(@CurrentCustomer Customer currentCustomer, @PathVariable long addressId) {
+    @GetMapping("/addresses/{addressId}")
+    public Address getCustomerAddress(@CurrentCustomer Customer currentCustomer, @PathVariable long addressId) {
         return addressService.getCustomerAddress(currentCustomer.getId(), addressId);
     }
 

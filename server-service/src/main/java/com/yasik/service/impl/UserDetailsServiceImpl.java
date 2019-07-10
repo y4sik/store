@@ -18,7 +18,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private CustomerDAO customerDAO;
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<Customer> customers = customerDAO.findByUsername(username);
         if (customers.size() == 0) {

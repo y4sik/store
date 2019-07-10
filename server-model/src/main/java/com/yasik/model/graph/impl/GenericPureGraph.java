@@ -10,7 +10,6 @@ public class GenericPureGraph<Entity> extends DefaultGraph implements MyGraph {
 
     private Class<Entity> entityClass;
 
-
     public GenericPureGraph(Class<Entity> entity) {
         this.entityClass=entity;
     }

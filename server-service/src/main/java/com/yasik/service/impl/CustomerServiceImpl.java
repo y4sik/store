@@ -6,6 +6,7 @@ import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.entity.customer.Role;
 import com.yasik.model.graph.GraphType;
 import com.yasik.service.CustomerService;
+import com.yasik.service.exception.DataAlreadyExistsException;
 import com.yasik.service.exception.EmailExistsException;
 import com.yasik.service.exception.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +38,6 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> getCustomers(GraphType graphType) {
         List<Customer> customers = customerDAO.getAll(graphType);
         if ((customers.size() == 0)) {
-//            LOGGER.error("There are no customers!");
             throw new EntityNotFoundException("There are no customers!");
         }
         return customers;
@@ -62,52 +62,25 @@ public class CustomerServiceImpl implements CustomerService {
             return customerDAO.persist(newCustomer);
 
         }
-//        LOGGER.error("An account [" + customer.getUsername() + "] already exists!");
         throw new EmailExistsException("An account [" + customer.getUsername() + "] already exists!");
     }
 
     @Override
     @Transactional
     public Customer updateCustomer(Customer customer, Customer currentCustomer) {
-        if (currentCustomer == null) {
-            throw new EntityNotFoundException("Can't update customer with id [" + customer.getId()
-                    + "]. No such customer!");
+        customer.setUsername(currentCustomer.getUsername());
+        customer.setPassword(currentCustomer.getPassword());
+        if (currentCustomer.equals(customer)) {
+            throw new DataAlreadyExistsException("Such data already exists! Change some field!");
         }
-        if (customer.getUsername() == currentCustomer.getUsername() &&
-                customer.getName() == currentCustomer.getName() &&
-                customer.getSurname() == currentCustomer.getSurname() &&
-                customer.getDateOfBirthday() == currentCustomer.getDateOfBirthday() &&
-                customer.getGender() == currentCustomer.getGender() &&
-                customer.getPhoneNumber() == currentCustomer.getPhoneNumber() &&
-                passwordEncoder.encode(customer.getPassword()) == currentCustomer.getPassword()) {
-
-        }
-        currentCustomer.setName(customer.getName());
-        currentCustomer.setSurname(customer.getSurname());
-        currentCustomer.setPhoneNumber(customer.getPhoneNumber());
-        currentCustomer.setGender(customer.getGender());
-        currentCustomer.setDateOfBirthday(customer.getDateOfBirthday());
-        currentCustomer.setPassword(passwordEncoder.encode(customer.getPassword()));
-        try {
-            userDetailsService.loadUserByUsername(customer.getUsername());
-        } catch (UsernameNotFoundException e) {
-            currentCustomer.setUsername(customer.getUsername());
-
-            return customerDAO.merge(currentCustomer);
-        }
-        if (customer.getUsername() == currentCustomer.getUsername()) {
-            return customerDAO.merge(currentCustomer);
-        }
-//        LOGGER.error("An account with such email [" + customer.getUsername() + "],  already exists!");
-        throw new EmailExistsException("An account with such email [" + customer.getUsername() + "],  already exists!");
+        return customerDAO.merge(customer);
     }
 
     @Override
     @Transactional
     public Customer getCustomer(long id, GraphType graphType) {
-        Customer customer = customerDAO.geById(id, graphType);
+        Customer customer = customerDAO.getById(id, graphType);
         if (customer == null) {
-//            LOGGER.error("Customer with id [" + id + "], not found!");
             throw new EntityNotFoundException("Customer with id [" + id + "], not found!");
         }
         return customer;
@@ -116,9 +89,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public long deleteCustomer(long id) {
-        Customer customer = customerDAO.geById(id, GraphType.PURE_ENTITY);
+        Customer customer = customerDAO.getById(id, GraphType.PURE_ENTITY);
         if (customer == null) {
-//            LOGGER.error("Can't delete customer. Invalid Id: [" + id + "]!");
             throw new EntityNotFoundException("Can't delete customer. Invalid Id [" + id + "]!");
         }
         customerDAO.remove(customer);

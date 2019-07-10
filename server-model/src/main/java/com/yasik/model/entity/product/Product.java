@@ -9,6 +9,7 @@ import com.yasik.model.entity.Order;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @JsonIdentityInfo(
@@ -45,7 +46,7 @@ public class Product {
     private Set<Feedback> feedback;
 
     //@JsonManagedReference
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -172,5 +173,21 @@ public class Product {
                 ", quantity=" + quantity +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return cost == product.cost &&
+                quantity == product.quantity &&
+                Objects.equals(name, product.name) &&
+                Objects.equals(description, product.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, cost, quantity, description);
     }
 }

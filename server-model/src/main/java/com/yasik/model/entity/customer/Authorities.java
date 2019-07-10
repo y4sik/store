@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -65,5 +66,16 @@ public class Authorities implements GrantedAuthority {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Authorities that = (Authorities) o;
+        return Objects.equals(authority, that.authority);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(authority);
+    }
 }

@@ -31,8 +31,13 @@ public class AdminController {
     @DeleteMapping("/customers/{id}")
     public long deleteAccount(@PathVariable long id) {
         customerService.deleteCustomer(id);
-        LOGGER.info("Customer with id [" +id +"], was successfully deleted");
+        LOGGER.info("Customer with id [" + id + "], was successfully deleted");
         return id;
+    }
+
+    @GetMapping("/customers/{customerId}")
+    public Customer getCustomer(@PathVariable long customerId) {
+        return customerService.getCustomer(customerId, GraphType.PURE_ENTITY);
     }
 
     @GetMapping("/customers")
@@ -40,22 +45,21 @@ public class AdminController {
         return customerService.getCustomers(GraphType.CUSTOMER_WITH_AUTHORITIES);
     }
 
-//    @PutMapping("/customers")
-//    public Customer update(@RequestBody Customer customer) {
-//        Customer updatedCustomer = customerService.updateCustomer(customer);
-//        LOGGER.info("Customer [" + updatedCustomer + "], was successfully update!");
-//        return updatedCustomer;
-//    }
-
     @GetMapping("/addresses")
     public List<Address> getAddresses() {
-        return addressService.getAllAddresses();
+        return addressService.getAllAddresses(GraphType.PURE_ENTITY);
+    }
+
+    @GetMapping("addresses/{id}")
+    public Address getAddress(@PathVariable long id) {
+        return addressService.getAddress(id, GraphType.PURE_ENTITY);
     }
 
     @DeleteMapping("/addresses/{id}")
     public long deleteAddress(@PathVariable long id) {
-
-        return addressService.deleteAddress(id);
+        long addressId = addressService.deleteAddress(id);
+        LOGGER.info("Address with id [" + id + "], was successfully deleted");
+        return addressId;
     }
 
     @GetMapping("/addresses/{customerId}")
@@ -66,7 +70,6 @@ public class AdminController {
     @GetMapping("/feedback/customer/{customerId}")
     public List<Feedback> getAllCustomerFeedback(@PathVariable long customerId) {
         return feedbackService.getCustomerFeedback(customerId);
-
     }
 
 }

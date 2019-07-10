@@ -7,6 +7,7 @@ import com.yasik.model.entity.product.Product;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -105,5 +106,20 @@ public class Feedback {
                 ", date=" + date +
                 ", time=" + time +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Feedback feedback = (Feedback) o;
+        return Objects.equals(review, feedback.review) &&
+                Objects.equals(date, feedback.date) &&
+                Objects.equals(time, feedback.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(review, date, time);
     }
 }

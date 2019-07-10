@@ -28,35 +28,43 @@ public class GlobalExceptionHandler extends BasicAuthenticationEntryPoint /*impl
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponseBody> handleException(EntityNotFoundException e) {
-        LOGGER.error(e.getMessage());
-        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.NOT_FOUND.value(), e.getMessage(), LocalDateTime.now());
+        LOGGER.error(e.getClass().toString() + ": " + e.getMessage());
+        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.NOT_FOUND.value(),
+                e.getClass().toString() + ": " + e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponseBody> handleException(EmailExistsException e) {
-        LOGGER.error(e.getMessage());
-        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());;
+        LOGGER.error(e.getClass().toString() + ": " + e.getMessage());
+        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.BAD_REQUEST.value(),
+                e.getClass().toString() + ": " + e.getMessage(), LocalDateTime.now());
+        ;
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponseBody> handleException(Exception e) {
-        LOGGER.error(e.getMessage());
-        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+        LOGGER.error(e.getClass().toString() + ": " + e.getMessage());
+        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.BAD_REQUEST.value(),
+                e.getClass().toString() + ": " + e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<ErrorResponseBody> handleException(AccessDeniedException e, WebRequest request) {
-        LOGGER.error(e.getMessage());
-        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+        LOGGER.error(e.getClass().toString() + ": " + e.getMessage());
+        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.BAD_REQUEST.value(),
+                e.getClass().toString() + ": " + e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        LOGGER.error(e.getMessage());
-        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.UNAUTHORIZED.value(), "HTTP Status 401 : " + e.getMessage(), LocalDateTime.now());
+        LOGGER.error(e.getClass().toString() + ": " + e.getMessage());
+        ErrorResponseBody error = new ErrorResponseBody(HttpStatus.UNAUTHORIZED.value(),
+                "HTTP Status 401 : " + e.getMessage(), LocalDateTime.now());
         String answer = new ObjectMapper().writeValueAsString(error);
         httpServletResponse.addHeader("WWW-Authenticate", "Basic realm=" + getRealmName());
         httpServletResponse.setContentType("application/json");
@@ -65,6 +73,7 @@ public class GlobalExceptionHandler extends BasicAuthenticationEntryPoint /*impl
 //        PrintWriter writer = httpServletResponse.getWriter();
 //        writer.println("HTTP Status 401 - " + e.getMessage());
     }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         setRealmName("MY_TEST_REALM");

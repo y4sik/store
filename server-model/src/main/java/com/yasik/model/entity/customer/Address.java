@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -115,5 +116,22 @@ public class Address {
                 ", houseFlat='" + houseFlat + '\'' +
                 ", postcode=" + postcode +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return postcode == address.postcode &&
+                Objects.equals(country, address.country) &&
+                Objects.equals(city, address.city) &&
+                Objects.equals(street, address.street) &&
+                Objects.equals(houseFlat, address.houseFlat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(country, city, street, houseFlat, postcode);
     }
 }
