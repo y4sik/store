@@ -19,5 +19,5 @@ public interface CategoryService {
 
     long deleteCategory(long id);
 
-    Set<Product> getProductsByCategory(long categoryId);
+    Category getProductsByCategory(long categoryId);
 }

@@ -1,15 +1,19 @@
 package com.yasik.service;
 
 import com.yasik.model.entity.Feedback;
+import com.yasik.model.entity.customer.Customer;
 
 import java.util.List;
 
 public interface FeedbackService {
-    List<Feedback> getCustomerFeedback(long customerId);
 
-    List<Feedback> getProductFeedback(long productId);
+    List<Feedback> getCustomerFeedbacks(long customerId);
 
-    Feedback leaveFeedback(Feedback feedback, long productId);
+    List<Feedback> getFeedbacksAboutProduct(long productId);
+
+    Feedback leaveFeedback(Feedback feedback, long customerId);
+
+    long deleteCustomerFeedback(long customerId, long feedbackId);
 
     long deleteFeedback(long id);
 }

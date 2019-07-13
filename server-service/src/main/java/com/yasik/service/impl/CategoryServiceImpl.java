@@ -7,6 +7,8 @@ import com.yasik.model.graph.GraphType;
 import com.yasik.service.CategoryService;
 import com.yasik.service.exception.EmptyObjectException;
 import com.yasik.service.exception.EntityNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +19,14 @@ import java.util.Set;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    private static final Logger LOGGER = LogManager.getLogger(CategoryServiceImpl.class);
+
+
     @Autowired
     private CategoryDAO categoryDAO;
 
     @Override
+    @Transactional
     public List<Category> getCategories(GraphType graphType) {
         List<Category> categories = categoryDAO.getAll(graphType);
         if (categories.size() == 0) {
@@ -40,12 +46,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public Category addCategory(Category category) {
         category.setProducts(null);
         return categoryDAO.persist(category);
     }
 
     @Override
+    @Transactional
     public Category updateCategory(Category category) {
         Category updatableCategory = categoryDAO.getById(category.getId(), GraphType.PURE_ENTITY);
         if (updatableCategory == null) {
@@ -60,6 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public long deleteCategory(long id) {
         Category category = categoryDAO.getById(id, GraphType.PURE_ENTITY);
         if (category == null) {
@@ -70,12 +79,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Set<Product> getProductsByCategory(long categoryId) {
+    @Transactional
+    public Category getProductsByCategory(long categoryId) {
         Category category = getCategory(categoryId, GraphType.CATEGORY_WITH_PRODUCTS);
         if (category.getProducts() == null) {
             throw new EmptyObjectException("Category with id [" + categoryId + "] has no Products!");
         }
-        return category.getProducts();
+        LOGGER.info(category.getProducts());
+        return category;
     }
 
 

@@ -26,7 +26,7 @@ public class AddressServiceImpl implements AddressService {
     public List<Address> getAllAddresses(GraphType graphType) {
         List<Address> addresses = addressDAO.getAll(graphType);
         if ((addresses.size() == 0)) {
-            throw new EntityNotFoundException("There are no addresses!");
+            throw new EntityNotFoundException("There are no Addresses!");
         }
         return addresses;
     }
@@ -56,7 +56,7 @@ public class AddressServiceImpl implements AddressService {
     public long deleteAddress(long id) {
         Address address = addressDAO.getById(id, GraphType.PURE_ENTITY);
         if (address == null) {
-            throw new EntityNotFoundException("Can't delete address. Invalid Id [" + id + "]!");
+            throw new EntityNotFoundException("Can't delete Address. Invalid Id [" + id + "]!");
         }
         addressDAO.remove(address);
         return id;
@@ -67,7 +67,8 @@ public class AddressServiceImpl implements AddressService {
     public List<Address> getCustomerAddresses(long customerId) {
         List<Address> addresses = addressDAO.getAddressesByCustomerId(customerId);
         if (addresses.size() == 0) {
-            throw new EntityNotFoundException("Customer with id [" + customerId + "], has no addresses!");
+            throw new EntityNotFoundException("Customer with id [" + customerId + "], " +
+                    "has no Addresses!");
         }
         return addresses;
     }
@@ -78,7 +79,7 @@ public class AddressServiceImpl implements AddressService {
         List<Address> addresses = addressDAO.getAddressByCustomerAndAddressId(customerId, addressId);
         if (addresses.size() == 0) {
             throw new EntityNotFoundException("Customer with id [" + customerId + "], " +
-                    "has no address [" + addressId + "]");
+                    "has no Address with id [" + addressId + "]!");
         }
         return addresses.get(0);
     }
@@ -88,10 +89,10 @@ public class AddressServiceImpl implements AddressService {
     public long deleteCustomerAddress(long customerId, long addressId) {
         List<Address> addresses = addressDAO.getAddressByCustomerAndAddressId(customerId, addressId);
         if (addresses.size() == 0) {
-            throw new EntityNotFoundException("Customer has no such address!");
+            throw new EntityNotFoundException("Customer has no such Address!");
         }
         addressDAO.remove(addresses.get(0));
-        return addressId;
+        return addresses.get(0).getId();
     }
 
 

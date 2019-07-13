@@ -24,6 +24,8 @@ public class CustomerGraph extends DefaultGraph implements MyGraph {
                 return CustomerWithAuthoritiesAddressesFeedbackOrders();
             case CUSTOMER_WITH_AUTHORITIES:
                 return CustomerWithAuthorities();
+            case CUSTOMER_WITH_ADDRESSES:
+                return CustomerWithAddresses();
             case PURE_ENTITY:
                 return pureEntity(Customer.class);
         }
@@ -45,5 +47,10 @@ public class CustomerGraph extends DefaultGraph implements MyGraph {
         return graph;
     }
 
+    private EntityGraph<Customer> CustomerWithAddresses() {
+        EntityGraph<Customer> graph = entityManager.createEntityGraph(Customer.class);
+        graph.addAttributeNodes("addresses");
+        return graph;
+    }
 
 }

@@ -51,8 +51,8 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @JsonInclude
     //@JsonManagedReference
+    @JsonInclude
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     @JoinTable(name = "order_product",

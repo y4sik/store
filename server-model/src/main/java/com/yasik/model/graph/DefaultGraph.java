@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 
 public abstract class DefaultGraph<Entity> {
 
+
     private EntityManager entityManager;
 
     public DefaultGraph() {

@@ -1,16 +1,21 @@
 package com.yasik.service.impl;
 
 import com.yasik.dao.FeedbackDAO;
+import com.yasik.dao.ProductDAO;
 import com.yasik.model.entity.Feedback;
 import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.entity.product.Product;
+import com.yasik.model.graph.GraphType;
 import com.yasik.service.FeedbackService;
+import com.yasik.service.exception.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -22,44 +27,68 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Autowired
     private FeedbackDAO feedbackDAO;
 
-    @Transactional
+    @Autowired
+    private ProductDAO productDAO;
+
     @Override
-    public List<Feedback> getCustomerFeedback(long customerId) {
-        List<Feedback> feedback = feedbackDAO.getFeedbackByCustomerId(customerId);
+    @Transactional
+    public List<Feedback> getCustomerFeedbacks(long customerId) {
+        List<Feedback> feedback = feedbackDAO.getFeedbacksByCustomerId(customerId);
         if (feedback.size() == 0) {
-            return null;
+            throw new EntityNotFoundException("Customer with id [" + customerId + "] did't leave Feedbacks!");
         }
         return feedback;
     }
 
-    @Transactional
     @Override
-    public List<Feedback> getProductFeedback(long productId) {
-        List<Feedback> feedbackList = feedbackDAO.getFeedbackByProductId(productId);
-        if (feedbackList.size() == 0) {
-            return null;
+    @Transactional
+    public List<Feedback> getFeedbacksAboutProduct(long productId) {
+        List<Feedback> feedbacks = feedbackDAO.getFeedbacksByProductId(productId);
+        if (feedbacks.size() == 0) {
+            throw new EntityNotFoundException("Product with id [" + productId + "] has no Feedbacks!");
         }
-
-        LOGGER.info("Feedback 0: " + feedbackList.get(0));
-        return feedbackList;
+        feedbacks.forEach(feed-> LOGGER.info(feed.getCustomer()));
+        return feedbacks;
     }
 
-    @Transactional
     @Override
-    public Feedback leaveFeedback(Feedback feedback, long productId) {
-        long customerIdFromSession = 8;
-        Product product = new Product();
-        product.setId(productId);
+    @Transactional
+    public Feedback leaveFeedback(Feedback feedback, long customerId) {
+        long productId = feedback.getProduct().getId();
+        Product product = productDAO.getById(productId, GraphType.PURE_ENTITY);
+        if (product == null) {
+            throw new EntityNotFoundException("Can't leave Feedback. " +
+                    "No Product with id [" + productId + "]!");
+        }
         Customer customer = new Customer();
-        customer.setId(customerIdFromSession);
+        customer.setId(customerId);
         feedback.setProduct(product);
         feedback.setCustomer(customer);
+        feedback.setDate(LocalDate.now());
+        feedback.setTime(LocalTime.now());
         return feedbackDAO.persist(feedback);
     }
 
     @Override
-    public long deleteFeedback(long id) {
-        return 0;
+    @Transactional
+    public long deleteCustomerFeedback(long customerId, long feedbackId) {
+        List<Feedback> feedbacks = feedbackDAO.getFeedbacksByCustomerFeedbackId(customerId, feedbackId);
+        if (feedbacks.size() == 0) {
+            throw new EntityNotFoundException("Customer with id [" + customerId + "], " +
+                    "has no Feedback with id [" + feedbackId + "]!");
+        }
+        feedbackDAO.remove(feedbacks.get(0));
+        return feedbacks.get(0).getId();
     }
 
+    @Override
+    @Transactional
+    public long deleteFeedback(long id) {
+        Feedback feedback = feedbackDAO.getById(id, GraphType.PURE_ENTITY);
+        if (feedback == null) {
+            throw new EntityNotFoundException("Can't delete Feedback. Invalid Id [" + id + "]!");
+        }
+        feedbackDAO.remove(feedback);
+        return id;
+    }
 }

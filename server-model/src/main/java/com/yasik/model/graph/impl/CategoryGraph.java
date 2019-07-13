@@ -18,9 +18,9 @@ public class CategoryGraph extends DefaultGraph implements MyGraph {
     }
 
     @Override
-    public EntityGraph getGraph(GraphType graphName) {
+    public EntityGraph<Category> getGraph(GraphType graphName) {
         switch (graphName) {
-            case CUSTOMER_WITH_AUTHORITIES_ADDRESSES_FEEDBACK_ORDERS:
+            case CATEGORY_WITH_PRODUCTS:
                 return CategoryWithProducts();
             case PURE_ENTITY:
                 return pureEntity(Category.class);

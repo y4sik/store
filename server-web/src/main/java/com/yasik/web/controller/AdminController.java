@@ -1,12 +1,14 @@
 package com.yasik.web.controller;
 
 import com.yasik.model.entity.Feedback;
+import com.yasik.model.entity.Order;
 import com.yasik.model.entity.customer.Address;
 import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.graph.GraphType;
 import com.yasik.service.AddressService;
 import com.yasik.service.CustomerService;
 import com.yasik.service.FeedbackService;
+import com.yasik.service.OrderService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,6 @@ public class AdminController {
     @Autowired
     private AddressService addressService;
 
-    @Autowired
-    private FeedbackService feedbackService;
 
     @DeleteMapping("/customers/{id}")
     public long deleteAccount(@PathVariable long id) {
@@ -37,7 +37,7 @@ public class AdminController {
 
     @GetMapping("/customers/{customerId}")
     public Customer getCustomer(@PathVariable long customerId) {
-        return customerService.getCustomer(customerId, GraphType.PURE_ENTITY);
+        return customerService.getCustomer(customerId, GraphType.CUSTOMER_WITH_AUTHORITIES);
     }
 
     @GetMapping("/customers")
@@ -67,10 +67,8 @@ public class AdminController {
         return addressService.getCustomerAddresses(customerId);
     }
 
-    @GetMapping("/feedback/customer/{customerId}")
-    public List<Feedback> getAllCustomerFeedback(@PathVariable long customerId) {
-        return feedbackService.getCustomerFeedback(customerId);
-    }
+
+
 
 }
 

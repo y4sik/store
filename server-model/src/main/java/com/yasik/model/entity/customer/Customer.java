@@ -20,9 +20,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
 @Entity
 @Table(name = "customer")
 public class Customer implements UserDetails {

@@ -1,6 +1,7 @@
 package com.yasik.model.entity.product;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class Category {
     private String name;
 
     //@JsonBackReference
+    @JsonInclude
     @OneToMany(mappedBy = "category",cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
             CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private Set<Product> products;

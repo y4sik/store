@@ -1,6 +1,9 @@
 package com.yasik.model.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.entity.product.Product;
 
@@ -24,18 +27,22 @@ public class Feedback {
     private String review;
 
     @Column(name = "date")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate date;
 
     @Column(name = "time")
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime time;
 
     //@JsonBackReference
+    @JsonInclude
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
     //@JsonBackReference
+    @JsonInclude
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

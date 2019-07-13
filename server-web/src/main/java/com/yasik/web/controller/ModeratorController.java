@@ -1,10 +1,14 @@
 package com.yasik.web.controller;
 
 
+import com.yasik.model.entity.Feedback;
+import com.yasik.model.entity.Order;
 import com.yasik.model.entity.product.Category;
 import com.yasik.model.entity.product.Product;
 import com.yasik.model.graph.GraphType;
 import com.yasik.service.CategoryService;
+import com.yasik.service.FeedbackService;
+import com.yasik.service.OrderService;
 import com.yasik.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/moderator")
@@ -20,12 +23,17 @@ public class ModeratorController {
 
     private static final Logger LOGGER = LogManager.getLogger(ModeratorController.class);
 
-
     @Autowired
     private ProductService productService;
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private FeedbackService feedbackService;
+
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/products")
     public List<Product> getProducts() {
@@ -92,8 +100,36 @@ public class ModeratorController {
     }
 
     @GetMapping("/product_by_category/{categoryId}")
-    public Set<Product> getProductsByCategory(@PathVariable long categoryId) {
+    public Category getProductsByCategory(@PathVariable long categoryId) {
         return categoryService.getProductsByCategory(categoryId);
     }
+
+    @GetMapping("/orders")
+    public List<Order> getOrders() {
+        return orderService.getOrders(GraphType.PURE_ENTITY);
+    }
+
+    @GetMapping("/customer_orders/{customerId}")
+    public List<Order> getCustomerOrders(@PathVariable long customerId) {
+        return orderService.getCustomerOrders(customerId);
+    }
+
+    @GetMapping("/product_orders/{productId}")
+    public List<Order> getProductOrders(@PathVariable long productId) {
+        return orderService.getProductOrders(productId);
+    }
+
+    @GetMapping("feedbacks/{customerId}")
+    public List<Feedback> getCustomerFeedbacks(@PathVariable long customerId) {
+        return feedbackService.getCustomerFeedbacks(customerId);
+    }
+
+    @DeleteMapping("/feedbacks/{id}")
+    public long deleteFeedback(@PathVariable long id) {
+        long deletedId = feedbackService.deleteFeedback(id);
+        LOGGER.info("Feedback with id [" + id + "], was successfully deleted!");
+        return deletedId;
+    }
+
 
 }

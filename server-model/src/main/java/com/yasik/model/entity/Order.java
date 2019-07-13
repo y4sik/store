@@ -1,20 +1,20 @@
 package com.yasik.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.yasik.model.entity.customer.Address;
 import com.yasik.model.entity.customer.Customer;
 import com.yasik.model.entity.product.Product;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalTime;
+import java.util.*;
 
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -25,7 +25,12 @@ public class Order {
     private long id;
 
     @Column(name = "date")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate date;
+
+    @Column(name = "time")
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
+    private LocalTime time;
 
     @Column(name = "status")
     private String status;
@@ -34,23 +39,29 @@ public class Order {
     private double price;
 
     //@JsonBackReference
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
     //@JsonBackReference
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     @JoinTable(name = "order_product",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> products;
+    private Set<Product> products;
 
     public Order() {
     }
 
-    public Order(LocalDate date, String status, double price) {
+    public Order(LocalDate date, LocalTime time, String status, double price) {
+        this.time = time;
         this.date = date;
         this.status = status;
         this.price = price;
@@ -70,6 +81,14 @@ public class Order {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 
     public String getStatus() {
@@ -96,17 +115,26 @@ public class Order {
         this.customer = customer;
     }
 
-    public List<Product> getProducts() {
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 
+
     public void add(Product product) {
         if (products == null) {
-            products = new ArrayList<>();
+            products = new HashSet<>();
         }
         products.add(product);
     }
@@ -116,6 +144,7 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", date=" + date +
+                ", time=" + time +
                 ", status=" + status +
                 ", price=" + price +
                 '}';
@@ -128,11 +157,12 @@ public class Order {
         Order order = (Order) o;
         return Double.compare(order.price, price) == 0 &&
                 Objects.equals(date, order.date) &&
+                Objects.equals(time, order.time) &&
                 Objects.equals(status, order.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, status, price);
+        return Objects.hash(date, time, status, price);
     }
 }
