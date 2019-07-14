@@ -4,12 +4,10 @@ package com.yasik.web.controller;
 import com.yasik.model.entity.Feedback;
 import com.yasik.model.entity.Order;
 import com.yasik.model.entity.product.Category;
+import com.yasik.model.entity.product.Picture;
 import com.yasik.model.entity.product.Product;
 import com.yasik.model.graph.GraphType;
-import com.yasik.service.CategoryService;
-import com.yasik.service.FeedbackService;
-import com.yasik.service.OrderService;
-import com.yasik.service.ProductService;
+import com.yasik.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,9 @@ public class ModeratorController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private PictureService pictureService;
+
     @GetMapping("/products")
     public List<Product> getProducts() {
         return productService.getProducts(GraphType.PURE_ENTITY);
@@ -58,7 +59,6 @@ public class ModeratorController {
         LOGGER.info("Product [" + updatedProduct + "], was successfully updated!");
         return updatedProduct;
     }
-
 
     @DeleteMapping("/products/{id}")
     public long deleteProduct(@PathVariable long id) {
@@ -90,7 +90,6 @@ public class ModeratorController {
         LOGGER.info("Category [" + updatedCategory + "], was successfully updated!");
         return updatedCategory;
     }
-
 
     @DeleteMapping("/categories/{id}")
     public long deleteCategory(@PathVariable long id) {
@@ -131,5 +130,18 @@ public class ModeratorController {
         return deletedId;
     }
 
+    @PostMapping("/pictures")
+    public Picture addPictureForProduct(@RequestBody Picture picture) {
+        Picture newPicture = pictureService.addPictureForProduct(picture);
+        LOGGER.info("Picture [" + newPicture + "], was successfully added!");
+        return newPicture;
+    }
+
+    @DeleteMapping("/pictures/{id}")
+    public long deletePicture(@PathVariable long id) {
+        long deletedId = pictureService.deletePicture(id);
+        LOGGER.info("Picture with id [" + id + "], was successfully deleted!");
+        return deletedId;
+    }
 
 }

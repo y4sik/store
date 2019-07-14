@@ -14,6 +14,8 @@ public class Picture {
     @Column(name = "picture_path")
     private String picturePath;
 
+    private Product product;
+
     public Picture(){}
 
     public Picture(String picturePath) {
@@ -34,6 +36,14 @@ public class Picture {
 
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override
