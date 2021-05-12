@@ -26,7 +26,7 @@
 
     <properties>
         <fasterxml.jackson.version>2.9.8</fasterxml.jackson.version>
-        <springframework.version>5.1.4.RELEASE</springframework.version>
+        <springframework.version>5.2.10.RELEASE</springframework.version>
     </properties>
 
 <dependencies>
